@@ -5,14 +5,14 @@ using Databricks.NET.AccountApi.Models;
 
 namespace Databricks.NET.AccountApi.Services
 {
-    public class AccountsApi : IAccountApi
+    public class AccountGroupsApiClient : IAccountGroupsApiClient
     {
 
         private readonly HttpClient _httpClient;
         private readonly string _baseUri;
         private readonly string _accountId;
 
-        public AccountsApi(string baseUri, string token, string accountId)
+        public AccountGroupsApiClient(string baseUri, string token, string accountId)
         {
             _baseUri = baseUri;
             _httpClient = new HttpClient();

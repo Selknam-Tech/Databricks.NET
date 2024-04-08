@@ -1,24 +1,24 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Databricks.NET.AccountApi.Interfaces;
+using Databricks.NET.AccountApi.Services;
 
 namespace Databricks.NET
 {
     public class DatabricksApiClient
     {
-        private readonly IAccountsApiService _accountsApi;
+        private readonly IAccountGroupsApiClient _accountGroupsApi;
         private readonly string _apiToken;
         private readonly string _accountId;
+        private readonly string _baseUri;
 
-        public DatabriksApiClient(string apiToken, string accountId)
+
+        public DatabricksApiClient(string apiToken, string accountId, string baseUri)
         {
-            _accountApi = accountApi;
+            _accountId = accountId;
+            _apiToken = apiToken;
+            _baseUri = baseUri;
 
-            // Aquí instancias tus servicios, pasando la configuración necesaria
-            // Por ejemplo, inicializando AccountsApiService con el apiToken
-            var baseUri = "https://<tu-instancia-databricks>.azuredatabricks.net"; // Asegúrate de reemplazar <tu-instancia-databricks> con tu instancia real
-            _accountsApi = new AccountsApi(baseUri, _apiToken);
+
+            _accountGroupsApi = new AccountGroupsApiClient(_baseUri, _apiToken, _accountId);
         }
 
 
