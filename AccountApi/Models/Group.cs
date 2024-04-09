@@ -9,7 +9,7 @@ namespace Databricks.NET.AccountApi.Models
     public class Group
     {
         [JsonPropertyName("id")]
-        public long Id { get; set; }
+        public string Id { get; set; }
 
         [JsonPropertyName("displayName")]
         public string DisplayName { get; set; }

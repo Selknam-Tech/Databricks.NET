@@ -10,6 +10,9 @@ namespace Databricks.NET
         private readonly string _accountId;
         private readonly string _baseUri;
 
+        public IAccountGroupsApiClient AccountGroupsApi => _accountGroupsApi;
+
+
 
         public DatabricksApiClient(string apiToken, string accountId, string baseUri)
         {
