@@ -1,7 +1,10 @@
+using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using Databricks.NET.AccountApi.Interfaces;
 using Databricks.NET.AccountApi.Models;
+using Databricks.NET.AccountApi.Models.Request;
+using Databricks.NET.AccountApi.Models.Response;
 
 namespace Databricks.NET.AccountApi.Services
 {
@@ -20,24 +23,24 @@ namespace Databricks.NET.AccountApi.Services
             _accountId = accountId;
         }
 
-        public async Task<GroupResponse> ListGroupsAsync(string filter = null, string attributes = null, string excludedAttributes = null, int? startIndex = null, int? count = null, string sortBy = null, string sortOrder = "ascending")
+        public async Task<GroupResponse> ListGroupsAsync(GroupListRequest request)
         {
             var uriBuilder = new StringBuilder($"{_baseUri}/api/2.0/accounts/{_accountId}/scim/v2/Groups?");
 
-            if (!string.IsNullOrWhiteSpace(filter))
-                uriBuilder.Append($"filter={Uri.EscapeDataString(filter)}&");
-            if (!string.IsNullOrWhiteSpace(attributes))
-                uriBuilder.Append($"attributes={Uri.EscapeDataString(attributes)}&");
-            if (!string.IsNullOrWhiteSpace(excludedAttributes))
-                uriBuilder.Append($"excludedAttributes={Uri.EscapeDataString(excludedAttributes)}&");
-            if (startIndex.HasValue)
-                uriBuilder.Append($"startIndex={startIndex.Value}&");
-            if (count.HasValue)
-                uriBuilder.Append($"count={count.Value}&");
-            if (!string.IsNullOrWhiteSpace(sortBy))
-                uriBuilder.Append($"sortBy={Uri.EscapeDataString(sortBy)}&");
-            if (!string.IsNullOrWhiteSpace(sortOrder))
-                uriBuilder.Append($"sortOrder={sortOrder}");
+            if (!string.IsNullOrWhiteSpace(request.Filter))
+                uriBuilder.Append($"filter={Uri.EscapeDataString(request.Filter)}&");
+            if (!string.IsNullOrWhiteSpace(request.Attributes))
+                uriBuilder.Append($"attributes={Uri.EscapeDataString(request.Attributes)}&");
+            if (!string.IsNullOrWhiteSpace(request.ExcludedAttributes))
+                uriBuilder.Append($"excludedAttributes={Uri.EscapeDataString(request.ExcludedAttributes)}&");
+            if (request.StartIndex.HasValue)
+                uriBuilder.Append($"startIndex={request.StartIndex.Value}&");
+            if (request.Count.HasValue)
+                uriBuilder.Append($"count={request.Count.Value}&");
+            if (!string.IsNullOrWhiteSpace(request.SortBy))
+                uriBuilder.Append($"sortBy={Uri.EscapeDataString(request.SortBy)}&");
+            if (!string.IsNullOrWhiteSpace(request.SortOrder))
+                uriBuilder.Append($"sortOrder={request.SortOrder}");
 
             var requestUri = uriBuilder.ToString().TrimEnd('&');
 
@@ -49,6 +52,35 @@ namespace Databricks.NET.AccountApi.Services
             var result = JsonSerializer.Deserialize<GroupResponse>(content, options);
 
             return result;
+        }
+
+        public async Task<Group> CreateGroupAsync(GroupCreationRequest request)
+        {
+            var content = JsonContent.Create(request);
+            var response = await _httpClient.PostAsync($"{_baseUri}/api/2.0/accounts/{_accountId}/scim/v2/Groups", content);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<Group>();
+        }
+
+        public async Task<Group> GetGroupAsync(string groupId)
+        {
+            var response = await _httpClient.GetAsync($"{_baseUri}/api/2.0/accounts/{_accountId}/scim/v2/Groups/{groupId}");
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<Group>();
+        }
+
+        public async Task<Group> UpdateGroupAsync(string groupId, GroupUpdateRequest updateRequest)
+        {
+            var content = JsonContent.Create(updateRequest);
+            var response = await _httpClient.PutAsync($"{_baseUri}/api/2.0/accounts/{_accountId}/scim/v2/Groups/{groupId}", content);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<Group>();
+        }
+
+        public async Task DeleteGroupAsync(string groupId)
+        {
+            var response = await _httpClient.DeleteAsync($"{_baseUri}/api/2.0/accounts/{_accountId}/scim/v2/Groups/{groupId}");
+            response.EnsureSuccessStatusCode();
         }
     }
 }

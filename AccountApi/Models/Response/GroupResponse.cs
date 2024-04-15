@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
-namespace Databricks.NET.AccountApi.Models
+namespace Databricks.NET.AccountApi.Models.Response
 {
     public class GroupResponse
     {
