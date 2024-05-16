@@ -6,22 +6,22 @@ namespace Databricks.NET
     public class DatabricksApiClient
     {
         private readonly IAccountGroupsApiClient _accountGroupsApi;
-        private readonly string _apiToken;
-        private readonly string _accountId;
-        private readonly string _baseUri;
+        private readonly IAccountUserApiClient _accountUserApi;
 
         public IAccountGroupsApiClient AccountGroupsApi => _accountGroupsApi;
+        public IAccountUserApiClient  AccountUserApi => _accountUserApi;
 
 
 
         public DatabricksApiClient(string apiToken, string accountId, string baseUri)
         {
-            _accountId = accountId;
-            _apiToken = apiToken;
-            _baseUri = baseUri;
+            string _accountId = accountId;
+            string _apiToken = apiToken;
+            string _baseUri = baseUri;
 
 
             _accountGroupsApi = new AccountGroupsApiClient(_baseUri, _apiToken, _accountId);
+            _accountUserApi = new AccountUserApiClient(_baseUri, _apiToken, _accountId);
         }
 
 

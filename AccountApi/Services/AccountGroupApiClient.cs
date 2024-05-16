@@ -58,7 +58,14 @@ namespace Databricks.NET.AccountApi.Services
         {
             var content = JsonContent.Create(request);
             var response = await _httpClient.PostAsync($"{_baseUri}/api/2.0/accounts/{_accountId}/scim/v2/Groups", content);
-            response.EnsureSuccessStatusCode();
+            try{
+                response.EnsureSuccessStatusCode();
+            }catch(Exception e){
+                System.Console.WriteLine(await content.ReadAsStringAsync());
+                System.Console.WriteLine(await response.Content.ReadAsStringAsync());
+                System.Console.WriteLine(e.InnerException);
+            }
+            
             return await response.Content.ReadFromJsonAsync<Group>();
         }
 
@@ -69,18 +76,24 @@ namespace Databricks.NET.AccountApi.Services
             return await response.Content.ReadFromJsonAsync<Group>();
         }
 
-        public async Task<Group> UpdateGroupAsync(string groupId, GroupUpdateRequest updateRequest)
-        {
-            var content = JsonContent.Create(updateRequest);
-            var response = await _httpClient.PutAsync($"{_baseUri}/api/2.0/accounts/{_accountId}/scim/v2/Groups/{groupId}", content);
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<Group>();
-        }
-
         public async Task DeleteGroupAsync(string groupId)
         {
             var response = await _httpClient.DeleteAsync($"{_baseUri}/api/2.0/accounts/{_accountId}/scim/v2/Groups/{groupId}");
             response.EnsureSuccessStatusCode();
+        }
+
+        public async Task GroupUpdateAsync(string groupId, PatchRequest patchRequest)
+        {
+            var content = JsonContent.Create(patchRequest);
+            var response = await _httpClient.PatchAsync($"{_baseUri}/api/2.0/accounts/{_accountId}/scim/v2/Groups/{groupId}", content);
+
+            try{
+                response.EnsureSuccessStatusCode();
+            }catch(Exception e){
+                System.Console.WriteLine(await content.ReadAsStringAsync());
+                System.Console.WriteLine(await response.Content.ReadAsStringAsync());
+                System.Console.WriteLine(e.InnerException);
+            }
         }
     }
 }

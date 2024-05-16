@@ -8,8 +8,8 @@ namespace Databricks.NET.AccountApi.Interfaces
     {
         Task<GroupResponse> ListGroupsAsync(GroupListRequest request);
         Task<Group> CreateGroupAsync(GroupCreationRequest request);
+        Task GroupUpdateAsync(string groupId, PatchRequest patchRequest);
         Task<Group> GetGroupAsync(string groupId);
-        Task<Group> UpdateGroupAsync(string groupId, GroupUpdateRequest updateRequest);
         Task DeleteGroupAsync(string groupId);
     }
 }

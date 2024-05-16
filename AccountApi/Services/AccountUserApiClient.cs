@@ -33,7 +33,13 @@ namespace Databricks.NET.AccountApi.Services
             var requestUri = $"{_baseUri}/api/2.0/accounts/{_accountId}/scim/v2/Users?{queryString}";
 
             using var response = await _httpClient.GetAsync(requestUri);
-            response.EnsureSuccessStatusCode();
+            try{
+                response.EnsureSuccessStatusCode();
+            }catch(Exception e){
+                System.Console.WriteLine(await response.Content.ReadAsStringAsync());
+                System.Console.WriteLine(e.InnerException);
+            }
+
             var content = await response.Content.ReadAsStringAsync();
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             var result = JsonSerializer.Deserialize<UserListResponse>(content, options);
